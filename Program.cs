@@ -7,18 +7,22 @@ namespace Implementeringsprojekt
         static void Main(string[] args)
         {
 
-            var mulShift = new MultiplyShift();
-            ulong a = 0b10001000_01110110_10110000_01001011_10100011_00000000_10100001_11110001;
-            Random rnd = new Random(26);
-            int l = rnd.Next(64);    
+            var function = new HashFunctions();
+            //ulong a = 0b10001000_01110110_10110000_01001011_10100011_00000000_10100001_11110001;
+
+            Random rnd = new Random(42);
+            var a = rnd.Next((int)Math.Pow(2,89)-1);
+            var b = rnd.Next((int)Math.Pow(2,89)-1);
+            int l = 5;    
 
             // creates a tuple of streams (TEST)
-            var tuple = StreamGenerator.CreateStream(100, l);
+            var tuple = StreamGenerator.CreateStream(20, l);
             foreach (var stream in tuple)
             {
-                Console.WriteLine(mulShift.Hash(a, stream.Item1, l));
-                //Console.WriteLine(stream.Item1);
+                Console.WriteLine(function.MultiplyModPrime(stream.Item1, l));
+                Console.WriteLine(stream);
             }
+            
         }
     }
 }
