@@ -1,0 +1,13 @@
+C:\Users\henri\Desktop\RAD\Implementeringsprojekt\bin\Debug\netcoreapp3.1\Implementeringsprojekt.exe
+C:\Users\henri\Desktop\RAD\Implementeringsprojekt\bin\Debug\netcoreapp3.1\Implementeringsprojekt.deps.json
+C:\Users\henri\Desktop\RAD\Implementeringsprojekt\bin\Debug\netcoreapp3.1\Implementeringsprojekt.runtimeconfig.json
+C:\Users\henri\Desktop\RAD\Implementeringsprojekt\bin\Debug\netcoreapp3.1\Implementeringsprojekt.runtimeconfig.dev.json
+C:\Users\henri\Desktop\RAD\Implementeringsprojekt\bin\Debug\netcoreapp3.1\Implementeringsprojekt.dll
+C:\Users\henri\Desktop\RAD\Implementeringsprojekt\bin\Debug\netcoreapp3.1\Implementeringsprojekt.pdb
+C:\Users\henri\Desktop\RAD\Implementeringsprojekt\obj\Debug\netcoreapp3.1\Implementeringsprojekt.csprojAssemblyReference.cache
+C:\Users\henri\Desktop\RAD\Implementeringsprojekt\obj\Debug\netcoreapp3.1\Implementeringsprojekt.AssemblyInfoInputs.cache
+C:\Users\henri\Desktop\RAD\Implementeringsprojekt\obj\Debug\netcoreapp3.1\Implementeringsprojekt.AssemblyInfo.cs
+C:\Users\henri\Desktop\RAD\Implementeringsprojekt\obj\Debug\netcoreapp3.1\Implementeringsprojekt.csproj.CoreCompileInputs.cache
+C:\Users\henri\Desktop\RAD\Implementeringsprojekt\obj\Debug\netcoreapp3.1\Implementeringsprojekt.dll
+C:\Users\henri\Desktop\RAD\Implementeringsprojekt\obj\Debug\netcoreapp3.1\Implementeringsprojekt.pdb
+C:\Users\henri\Desktop\RAD\Implementeringsprojekt\obj\Debug\netcoreapp3.1\Implementeringsprojekt.genruntimeconfig.cache
