@@ -6,8 +6,8 @@ namespace Implementeringsprojekt {
             class hashentry
             {
                 ulong key;
-                ulong data;
-                public hashentry(ulong key, ulong data)
+                long data;
+                public hashentry(ulong key, long data)
                 {
                     this.key = key;
                     this.data = data;
@@ -16,12 +16,12 @@ namespace Implementeringsprojekt {
                 {
                     return key;
                 }
-                public ulong getdata()
+                public long getdata()
                 {
                     return data;
                 }
 
-                public void incrementdata(ulong d) {
+                public void incrementdata(long d) {
                     data = data + d;
                 }
             }
@@ -37,34 +37,34 @@ namespace Implementeringsprojekt {
                 lSize = l;
                 hashMethod = hasher;
                 hashFunctions = hashing;
-                table = new hashentry[maxSize];
+                table = new hashentry[maxSize+1];
                 for (int i = 0; i < maxSize; i++)
                 {
                     table[i] = null;
                 }
             }
-            public ulong get(ulong key) {
+            public long get(ulong key) {
                 int hash = hasher(key);
                 while (table[hash] != null && table[hash].getkey() != key)
                 {
-                    hash = (hash + 1);
+                    hash = (hash + 1) % maxSize;
                 }
                 return table[hash] == null ? 0 : table[hash].getdata();
             }
-            public void set(ulong key, ulong data) {
+            public void set(ulong key, long data) {
                 int hash = hasher(key);
                 while (table[hash] != null && table[hash].getkey() != key)
                 {
-                    hash = (hash + 1);
+                    hash = (hash + 1) % maxSize;
                 }
                 table[hash] = new hashentry(key, data);
             }
 
-            public void increment(ulong key, ulong d) {
+            public void increment(ulong key, long d) {
                 int hash = hasher(key);
                 while (table[hash] != null && table[hash].getkey() != key)
                 {
-                    hash = (hash + 1);
+                    hash = (hash + 1) % maxSize;
                 }
 
                 if (table[hash] == null) {
@@ -73,6 +73,17 @@ namespace Implementeringsprojekt {
                     table[hash].incrementdata(d);  
                 }
             }
+
+            public long calcQuadraticSum() {
+                long sum = 0;
+                foreach (var s in table) {
+                    if (s != null) {
+                        sum += (long) Math.Pow(s.getdata(), 2);
+                    }
+                }
+
+                return sum;
+            }
             private int hasher(ulong key) {
                 int hash = 0;
                 switch (hashMethod) {
@@ -80,7 +91,7 @@ namespace Implementeringsprojekt {
                     hash = (int)hashFunctions.MultiplyShift(key, lSize);
                     break;
                 case "ModPrime":
-                    hash = (int)hashFunctions.MultiplyModPrime(key, lSize);
+                    hash = (int)hashFunctions.MultiplyModPrime(key);
                     break;
                 }
 
