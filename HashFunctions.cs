@@ -21,9 +21,9 @@ namespace Implementeringsprojekt
         }
 
         public BigInteger MultiplyModPrime(ulong x, int l){
-            string a = "82164261376181154113155191";
+            string a = "6925115517784187226122207";
             BigInteger bigA = BigInteger.Parse(a);
-            string b = "14815078981061821961915417";
+            string b = "583421377714931531722877";
             BigInteger bigB = BigInteger.Parse(b);
             string p = "618970019642690137449562111";
             BigInteger bigP = BigInteger.Parse(p);
@@ -32,7 +32,7 @@ namespace Implementeringsprojekt
             BigInteger newX = (bigA * x + bigB);
             BigInteger y = Modulos(newX,bigP, 89);
             
-            return Modulos(y, r, l);
+            return y % r;
         } 
     }
 }

@@ -10,7 +10,7 @@ namespace Implementeringsprojekt
         static void Main(string[] args)
         {
             var function = new HashFunctions();
-            int l = 50;    
+            int l = 20;    
 
             // creates a tuple of streams (TEST)
             var tuple = StreamGenerator.CreateStream(20000, l);
@@ -36,6 +36,10 @@ namespace Implementeringsprojekt
             Console.WriteLine(modResult);   
             Console.WriteLine(watch.ElapsedMilliseconds);
             watch.Stop();
+            
+            var tableShift = new Hashtable(function, "Shift", l);
+            var tableMod = new Hashtable(function, "ModPrime", l);
+            
             
         }
     }
