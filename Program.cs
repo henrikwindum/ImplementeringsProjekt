@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 
 namespace Implementeringsprojekt
 {
@@ -6,22 +9,33 @@ namespace Implementeringsprojekt
     {
         static void Main(string[] args)
         {
-
             var function = new HashFunctions();
-            //ulong a = 0b10001000_01110110_10110000_01001011_10100011_00000000_10100001_11110001;
-
-            Random rnd = new Random(42);
-            var a = rnd.Next((int)Math.Pow(2,89)-1);
-            var b = rnd.Next((int)Math.Pow(2,89)-1);
-            int l = 5;    
+            int l = 50;    
 
             // creates a tuple of streams (TEST)
-            var tuple = StreamGenerator.CreateStream(20, l);
-            foreach (var stream in tuple)
-            {
-                Console.WriteLine(function.MultiplyModPrime(stream.Item1, l));
-                Console.WriteLine(stream);
+            var tuple = StreamGenerator.CreateStream(20000, l);
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            var valueList = new List<ulong>(); 
+            foreach (var stream in tuple) {
+                var res = function.MultiplyShift(stream.Item1, l);
+                valueList.Add(res); 
+                //Console.WriteLine(res);
             }
+            var shiftResult = valueList.Aggregate((currentSum, item)=> currentSum + item);
+            Console.WriteLine(shiftResult);                
+            Console.WriteLine(watch.ElapsedMilliseconds);
+            watch.Reset();
+            watch.Start();
+            var valueList2 = new List<System.Numerics.BigInteger>(); 
+            foreach (var stream2 in tuple) {
+                var res = function.MultiplyModPrime(stream2.Item1, l);
+                valueList2.Add(res);
+                //Console.WriteLine(res);
+            }
+            var modResult = valueList2.Aggregate((currentSum, item)=> currentSum + item);
+            Console.WriteLine(modResult);   
+            Console.WriteLine(watch.ElapsedMilliseconds);
+            watch.Stop();
             
         }
     }
