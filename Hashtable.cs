@@ -3,25 +3,25 @@ using System.Numerics;
 
 namespace Implementeringsprojekt {
     public class Hashtable {
-            class hashentry
+            class HashEntry
             {
                 ulong key;
                 long data;
-                public hashentry(ulong key, long data)
+                public HashEntry(ulong key, long data)
                 {
                     this.key = key;
                     this.data = data;
                 }
-                public ulong getkey()
+                public ulong GetKey()
                 {
                     return key;
                 }
-                public long getdata()
+                public long GetData()
                 {
                     return data;
                 }
 
-                public void incrementdata(long d) {
+                public void IncrementData(long d) {
                     data = data + d;
                 }
             }
@@ -30,61 +30,61 @@ namespace Implementeringsprojekt {
             private string hashMethod;
             private HashFunctions hashFunctions;
             
-            hashentry[] table;
+            HashEntry[] table;
             
             public Hashtable(HashFunctions hashing, string hasher, int l) {
                 maxSize = (int) Math.Pow(2, l);
                 lSize = l;
                 hashMethod = hasher;
                 hashFunctions = hashing;
-                table = new hashentry[maxSize+1];
+                table = new HashEntry[maxSize+1];
                 for (int i = 0; i < maxSize; i++)
                 {
                     table[i] = null;
                 }
             }
             public long get(ulong key) {
-                int hash = hasher(key);
-                while (table[hash] != null && table[hash].getkey() != key)
+                int hash = Hasher(key);
+                while (table[hash] != null && table[hash].GetKey() != key)
                 {
                     hash = (hash + 1) % maxSize;
                 }
-                return table[hash] == null ? 0 : table[hash].getdata();
+                return table[hash] == null ? 0 : table[hash].GetData();
             }
-            public void set(ulong key, long data) {
-                int hash = hasher(key);
-                while (table[hash] != null && table[hash].getkey() != key)
+            public void Set(ulong key, long data) {
+                int hash = Hasher(key);
+                while (table[hash] != null && table[hash].GetKey() != key)
                 {
                     hash = (hash + 1) % maxSize;
                 }
-                table[hash] = new hashentry(key, data);
+                table[hash] = new HashEntry(key, data);
             }
 
-            public void increment(ulong key, long d) {
-                int hash = hasher(key);
-                while (table[hash] != null && table[hash].getkey() != key)
+            public void Increment(ulong key, long d) {
+                int hash = Hasher(key);
+                while (table[hash] != null && table[hash].GetKey() != key)
                 {
                     hash = (hash + 1) % maxSize;
                 }
 
                 if (table[hash] == null) {
-                    table[hash] = new hashentry(key, d);
+                    table[hash] = new HashEntry(key, d);
                 } else {
-                    table[hash].incrementdata(d);  
+                    table[hash].IncrementData(d);  
                 }
             }
 
-            public long calcQuadraticSum() {
+            public long CalcQuadraticSum() {
                 long sum = 0;
                 foreach (var s in table) {
                     if (s != null) {
-                        sum += (long) Math.Pow(s.getdata(), 2);
+                        sum += (long) Math.Pow(s.GetData(), 2);
                     }
                 }
 
                 return sum;
             }
-            private int hasher(ulong key) {
+            private int Hasher(ulong key) {
                 int hash = 0;
                 switch (hashMethod) {
                 case "Shift":

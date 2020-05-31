@@ -13,7 +13,7 @@ namespace Implementeringsprojekt
             var function = new HashFunctions(l);
 
             // creates a tuple of streams (TEST)
-            var tuple = StreamGenerator.CreateStream(100000, l);
+            IEnumerable<Tuple<ulong,int>> tuple = StreamGenerator.CreateStream(100000, l);
             var watch = System.Diagnostics.Stopwatch.StartNew();
             var valueList = new List<ulong>(); 
             foreach (var stream in tuple) {
@@ -39,7 +39,7 @@ namespace Implementeringsprojekt
             watch.Start();
             var valueList3 = new List<System.Numerics.BigInteger>();
             foreach (var stream2 in tuple) {
-                var res = function.FourUniversal(stream2.Item1);
+                var res = function.HCalc(stream2.Item1, 16);
                 valueList3.Add(res);
                 //Console.WriteLine(res);
             }
@@ -47,38 +47,75 @@ namespace Implementeringsprojekt
             Console.WriteLine(modResult2); 
             Console.WriteLine(watch.ElapsedMilliseconds);
             watch.Stop();
-            /*Program.tester(3200000, 2);
-            Program.tester(3200000, 4);
-            Program.tester(3200000, 8);
-            Program.tester(3200000, 12);
-            Program.tester(3200000, 16);
-            Program.tester(3200000, 20);
-            Program.tester(3200000, 24);
-            Program.tester(3200000, 26);
-            Program.tester(3200000, 28);
-            Program.tester(3200000, 29); */     
+            
+            //Console.WriteLine(function.Estimate(tuple, 16));
+/*            Program.TestHashTable(3200000, 2);*/
+/*            Program.TestHashTable(3200000, 4);*/
+//            Program.TestHashTable(3200000, 8);
+//            Program.TestHashTable(3200000, 12);
+//            Program.TestHashTable(3200000, 16);
+            //Program.TestHashTable(3200000, 20);
+//            Program.TestHashTable(3200000, 24);
+//            Program.TestHashTable(3200000, 26);
+//            Program.TestHashTable(3200000, 28);
+//            Program.TestHashTable(3200000, 29);  
+            TestCountSketch(100000, 12);
         }
-        public static void tester(int n, int l) {
-            var tuple = StreamGenerator.CreateStream(n, l);  
+        public static void TestHashTable(int n, int l) {
+            IEnumerable<Tuple<ulong,int>> tuple = StreamGenerator.CreateStream(n, l);  
             var function = new HashFunctions(l);
             var tableShift = new Hashtable(function, "Shift", l);
             var tableMod = new Hashtable(function, "ModPrime", l);
             
             var watch = System.Diagnostics.Stopwatch.StartNew();
             foreach (var (item1, item2) in tuple) {
-                tableShift.increment(item1, item2);
+                tableShift.Increment(item1, item2);
                 
             }
+
+            var shiftSum = tableShift.CalcQuadraticSum();
             Console.WriteLine("Time passed - shift: {0}, S: {1}, n: {2}, l: {3}", 
-                watch.ElapsedMilliseconds, tableShift.calcQuadraticSum(), n, l);
+                watch.ElapsedMilliseconds, shiftSum, n, l);
             watch.Reset();
             watch.Start();
             foreach (var (item1, item2) in tuple) {
-                tableMod.increment(item1, item2);
+                tableMod.Increment(item1, item2);
             }
+
+            var modSum = tableMod.CalcQuadraticSum();
             Console.WriteLine("Time passed - mod: {0}, S: {1}, n: {2}, l: {3}", 
-                watch.ElapsedMilliseconds, tableMod.calcQuadraticSum(), n, l);
+                watch.ElapsedMilliseconds, modSum, n, l);
+            watch.Reset();
+            watch.Start();
+            var estimate = function.Estimate(tuple, (int) Math.Pow(2, l));
+            Console.WriteLine("Time passed - CS estimate: {0}, S: {1}, n: {2}, l: {3}",
+                watch.ElapsedMilliseconds, estimate, n, l);
             watch.Stop();
+        }
+
+        public static void TestCountSketch(int n, int l) {
+            IEnumerable<Tuple<ulong,int>> tuple = StreamGenerator.CreateStream(n, l);
+            var function2 = new HashFunctions(l);
+            var tableShift = new Hashtable(function2, "Shift", l);
+            foreach (var (item1, item2) in tuple) {
+                tableShift.Increment(item1, item2);
+                
+            }
+            var shiftSum = tableShift.CalcQuadraticSum();
+            List<long> estimates = new List<long>();
+            for (int i = 0; i < 100; i++) {
+                var function = new HashFunctions(l);
+                var estimate = function.Estimate(tuple, (int) Math.Pow(2,l));
+                estimates.Add(estimate);
+                Console.WriteLine(estimate-shiftSum);
+            }
+            
+            long squaredError = 0;
+            foreach (var estimate in estimates) {
+                squaredError += (long)Math.Pow((estimate - shiftSum), 2) / 100;
+            }
+            Console.WriteLine("Shiftsum: {0}", shiftSum);
+            Console.WriteLine("Squared error: {0}",squaredError);
             
         }
     }
