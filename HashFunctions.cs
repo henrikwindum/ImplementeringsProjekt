@@ -9,7 +9,7 @@ namespace Implementeringsprojekt
         
         private BigInteger bigA = BitGenerator.RandomArray(1)[0];
         private BigInteger bigB = BitGenerator.RandomArray(1)[0];
-        private BigInteger bigP = BitGenerator.RandomArray(1)[0];
+        private BigInteger bigP = new BigInteger(Math.Pow(2,89)-1);
         private BigInteger r;
         private BigInteger[] bigAValues = BitGenerator.RandomArray(4);
 
@@ -52,7 +52,7 @@ namespace Implementeringsprojekt
         public BigInteger FourUniversal(ulong x) {
             BigInteger y = bigAValues[3];
             for (int i = 2; i >= 0; i--) {
-                y = y * (ulong)Math.Pow(x, i+1) + bigAValues[i];
+                y = y * x + bigAValues[i];
                 y = (y&bigP) + (y>>89);
             }
             if (y >= bigP) {
@@ -66,24 +66,24 @@ namespace Implementeringsprojekt
         }
 
         public int SCalc(ulong x) {
-            int b = (int)(FourUniversal(x) >> 88);
+            int b = (int)((FourUniversal(x) % bigP) >> 88);
             return 1 - 2*b;
         }
 
         public long[] CountSketch(IEnumerable<Tuple<ulong, int>> stream, int m) {
-            long[] c = new long[m];
+            long[] c = new long[(int) m];
             for (int i = 0; i < c.Length; i++) {
                 c[i] = 0;
             }
             foreach (var (x, delta) in stream) {
-                c[(int) HCalc(x, m)] += delta * SCalc(x);
+                c[(int) HCalc(x, m)] = c[(int) HCalc(x, m)] + delta * SCalc(x);
             }
             return c;
         }
 
-        public long Estimate(IEnumerable<Tuple<ulong, int>> stream, int m) {
+        public long Estimate(long[] sketches) {
             long sum = 0;
-            foreach (var count in CountSketch(stream, m)) {
+            foreach (var count in sketches) {
                 sum += (long)Math.Pow(count, 2);
             }
             return sum;
